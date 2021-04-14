@@ -1,0 +1,5 @@
+package com.heart.service;
+
+public interface BlackJackImpl {
+
+}

@@ -1,0 +1,10 @@
+package com.heart.model;
+
+public class DeckVO {
+
+   String deck ; 
+   Integer value ;
+   
+   
+   
+}

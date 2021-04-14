@@ -1,0 +1,74 @@
+package com.heart.service.impl;
+
+import com.heart.service.BlackjackRule;
+
+public class BlackJackImplV1 implements BlackjackRule{
+	
+	public BlackJackImplV1() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void gameMainScreen() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playScreen() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void inputGamer() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Integer bettingMoney() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void createCard() {
+		
+	}
+	@Override
+	public void suffleDeck() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void handDeck() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void checkBJ() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hitAndStand() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void gameResult() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void gamerMoney() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
