@@ -6,7 +6,11 @@ public class DeckVO {
    Integer value ;
 
    
-   public String getDeck() {
+   @Override
+public String toString() {
+	return "DeckVO [deck=" + deck + ", value=" + value + "]";
+}
+public String getDeck() {
 	return deck;
 }
 public void setDeck(String deck) {

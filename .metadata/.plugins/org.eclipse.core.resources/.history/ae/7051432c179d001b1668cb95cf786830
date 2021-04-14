@@ -1,0 +1,24 @@
+package com.heart;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.heart.model.DeckVO;
+import com.heart.service.impl.BlackJackYubin;
+
+public class Test {
+
+	public static void main(String[] args) {
+		List<DeckVO> deckList = new ArrayList<DeckVO>();
+		BlackJackYubin bY = new BlackJackYubin();
+		bY.createDeck();
+		bY.createValue();
+		
+		for(int i = 0; i < 52; i++) {
+			
+		System.out.println(deckList.get(i).getDeck());
+		System.out.println(deckList.get(i).getValue());
+		System.out.println("=======================");
+		}
+	}
+}

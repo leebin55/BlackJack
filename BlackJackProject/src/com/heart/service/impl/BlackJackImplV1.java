@@ -7,10 +7,8 @@ import com.heart.model.DeckVO;
 import com.heart.service.BlackjackRule;
 
 public class BlackJackImplV1 implements BlackjackRule{
-	List<DeckVO> cardList;
-	public BlackJackImplV1() {
-		cardList = new ArrayList<DeckVO>();
-	}
+	
+	
 
 	@Override
 	public void gameMainScreen() {

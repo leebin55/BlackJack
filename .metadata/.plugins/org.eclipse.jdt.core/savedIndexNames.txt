@@ -1,3 +1,2 @@
-INDEX VERSION 1.131+C:\bizworks\TeamProject\.metadata\.plugins\org.eclipse.jdt.core
-1292523732.index
+INDEX VERSION 1.131+C:\bizwork\TeamProject\.metadata\.plugins\org.eclipse.jdt.core
 3692123031.index
