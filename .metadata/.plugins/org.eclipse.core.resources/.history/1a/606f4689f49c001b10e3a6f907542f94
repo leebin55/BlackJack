@@ -1,0 +1,24 @@
+package com.heart.model;
+
+public class DeckVO {
+
+   String deck ; 
+   String value ;
+
+   
+   public String getDeck() {
+	return deck;
+}
+public void setDeck(String deck) {
+	this.deck = deck;
+}
+public String getValue() {
+	return value;
+}
+public void String(String value) {
+	this.value = value;
+}
+   
+   
+   
+}

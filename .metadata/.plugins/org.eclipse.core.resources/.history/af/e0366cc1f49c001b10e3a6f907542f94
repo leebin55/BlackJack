@@ -36,7 +36,9 @@ public class BlackJackImplV1 implements BlackjackRule{
 		return null;
 	}
 
-	
+	public void createCard() {
+		
+	}
 	@Override
 	public void suffleDeck() {
 		// TODO Auto-generated method stub
