@@ -11,7 +11,9 @@ public class Test {
 	public static void main(String[] args) {
 		
 		BlackJackYubin bY = new BlackJackYubin();
-		bY.testPrint();
+		bY.createDeck();
+		
+		//bY.testPrint();
 		
 	
 		
