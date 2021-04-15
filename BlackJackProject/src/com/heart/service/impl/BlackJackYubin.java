@@ -2,10 +2,24 @@ package com.heart.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.heart.model.DeckVO;
 
-public class BlackJackYubin {
+public class BlackJackYubin extends BlackJackImplV1{
+	@Override
+	public void suffleDeck() {
+		// TODO Auto-generated method stub
+		super.suffleDeck();
+	}
+
+	@Override
+	public void handDeck() {
+		// TODO Auto-generated method stub
+	
+	}
+
+
 	List<DeckVO> deckList;
 	String[] suit;
 	String[] strNum;
@@ -16,54 +30,37 @@ public class BlackJackYubin {
 	}
 	
 	public void createDeck(){ 
-		//TODO Heart A형태의 카드를 만들고 값을 만듬
+		//TODO 카드형식을 만들고 각 카드에 따른 값을 만듬
 		for(int i = 0; i < suit.length ; i++) {
 			for(int j = 0 ; j < strNum.length ; j++) {
 				String deck = suit[i] + " "  + strNum[j];
+				//Heart A Diamond 2 형식으로
 				DeckVO deckVO = new DeckVO();
 				deckVO.setDeck(deck);
 				deckList.add(deckVO); //deckList에 저장
 				try {//strNum 을 Integer형으로 바꿈
 					//오류가 없으면 strNum 에 담긴 값은 숫자값 >> 숫가 그대로 
-					//deckList 의 value값에 담음
+					//deckVO클래스 의 value값에 담고 deckList에 저장
 					Integer intNum = Integer.valueOf(strNum[j]);
-					//System.out.println(strNum[j]);
 					deckVO.setValue(intNum);
 					deckList.add(deckVO);
 				} catch (NumberFormatException e) {
 					// 만약 Integer 바꾸는데 오류가 났으면 숫자가 아닌 문자형이담긴 카드
-					// 만약 A라면 value 1을 그외의 문자는 10을 deckList에 담음 
+					// 만약 A라면 value 1을 그외의 문자는 10을 deckVO클래스에 담고 List 에 저장
 					if(strNum[j].equals("A")) {
 						Integer intNum = 1;
 						deckVO.setValue(intNum);
-						//System.out.println(intNum);
 						deckList.add(deckVO);
 					}else {
 						Integer intNum = 10;
 						deckVO.setValue(intNum);
-						//System.out.println(intNum);
 						deckList.add(deckVO);
 					}
-					
 				}
 			}
 		}
 		
 	}
 	
-	
-		
-	
-	public void testPrint() { //테스트용
-		for(int i = 0; i < deckList.size(); i++) {
-			
-			System.out.println(deckList.get(i).getDeck());
-			System.out.println(deckList.get(i).getValue());
-			System.out.println("=======================");
-			}
-	}
-	public void shufflDeck() {
-		
-	}
 }
 
