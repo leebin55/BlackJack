@@ -1,34 +1,40 @@
 package com.heart.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
+import java.util.Scanner;
 
 import com.heart.model.DeckVO;
 
 public class BlackJackYubin extends BlackJackImplV1{
-	@Override
-	public void suffleDeck() {
-		// TODO Auto-generated method stub
-		super.suffleDeck();
-	}
-
-	@Override
-	public void handDeck() {
-		// TODO Auto-generated method stub
 	
-	}
 
+			
+	
 
 	List<DeckVO> deckList;
 	String[] suit;
 	String[] strNum;
 	public BlackJackYubin() {
 		deckList= new ArrayList<DeckVO>();
-		suit =  new String[] {"Heart","Diamond","Clover","Space"};
+		suit =  new String[] {"Heart","Diamond","Club","Space"};
 		strNum = new String[] {"A","2","3","4","5","6","7","8","9","10","K","Q","J"};
+		
+		
 	}
 	
+	@Override
+	public void suffleDeck() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void handDeck() {
+		// TODO Auto-generated method stub
+		super.handDeck();
+	}
 	public void createDeck(){ 
 		//TODO 카드형식을 만들고 각 카드에 따른 값을 만듬
 		for(int i = 0; i < suit.length ; i++) {
@@ -59,8 +65,6 @@ public class BlackJackYubin extends BlackJackImplV1{
 				}
 			}
 		}
-		
 	}
-	
 }
 

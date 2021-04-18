@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="com.heart.service.BlackjackRule"/>
     <fullyQualifiedTypeName name="com.sun.tools.javac.util.List"/>
-    <fullyQualifiedTypeName name="com.heart.service.impl.BlackJackImplV1"/>
-    <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="com.heart.service.impl.BlackJackYubin"/>
     <fullyQualifiedTypeName name="com.heart.model.DeckVO"/>
+    <fullyQualifiedTypeName name="com.heart.service.impl.BlackJackYubin"/>
+    <fullyQualifiedTypeName name="com.heart.service.impl.CreateDeck"/>
+    <fullyQualifiedTypeName name="com.heart.service.impl.BlackJackImplV1"/>
     <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="java.util.Scanner"/>
+    <fullyQualifiedTypeName name="com.heart.service.PlayerService"/>
+    <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+    <fullyQualifiedTypeName name="com.heart.model.PlayerVO"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="com.heart.service.BlackjackRule"/>
+    <fullyQualifiedTypeName name="com.heart.impl.BlackJackRuleImplV2"/>
+    <fullyQualifiedTypeName name="com.heart.impl.BlackJackRuleImplV1"/>
 </qualifiedTypeNameHistroy>
