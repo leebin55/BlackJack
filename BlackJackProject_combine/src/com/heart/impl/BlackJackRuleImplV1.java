@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import com.heart.model.DeckVO;
+import com.heart.model.PlayerVO;
 import com.heart.service.BlackjackRule;
 
 public class BlackJackRuleImplV1 implements BlackjackRule {
@@ -48,7 +49,7 @@ public class BlackJackRuleImplV1 implements BlackjackRule {
 		System.out.println("*" + "            " + "블랙잭게임" + "            " + "*");
 		System.out.println("*".repeat(lineNum));
 
-		this.inputGamer();
+		this.inputGamer1();
 
 		while (true) {
 			System.out.println("\n현재" + playerName + "님의 재산은" + playerMoney + "원 입니다.");
@@ -146,7 +147,7 @@ public class BlackJackRuleImplV1 implements BlackjackRule {
 //			hitAndStand(); // 플레이어, 딜러 둘 다 블랙잭이 아니면 힛앤스탠드 함수 실행
 //		}
 
-		// bjC == true
+		// bjC == true 
 
 		boolean bjDC = this.checkBJ(dealerList);
 
@@ -173,8 +174,7 @@ public class BlackJackRuleImplV1 implements BlackjackRule {
 			return; //불러온 메소드로 
 		}
 	}
-	@Override
-	public void inputGamer() {
+	public void inputGamer1() {
 		// TODO 플레이어의 정보 입력
 
 		System.out.println("-".repeat(lineNum));
@@ -227,7 +227,6 @@ public class BlackJackRuleImplV1 implements BlackjackRule {
 
 	}
 
-	@Override
 	public void handDeck(List<DeckVO> list) {
 		// TODO 조아영
 		// 딜러와 플레이어의 카드 리스트를 매개변수로 받아서 deckList에서 카드정보(카드이름,점수)를 0번부터 차례대로 배분하여 나눠주는 메소드
@@ -254,7 +253,6 @@ public class BlackJackRuleImplV1 implements BlackjackRule {
 
 	}
 
-	@Override
 	public void hitAndStand() {
 		// TODO 장혜미
 		// 플레이어와 딜러의 히트 스탠드를 진행한다
@@ -387,6 +385,30 @@ public class BlackJackRuleImplV1 implements BlackjackRule {
 
 		// 배팅금 다시 돌려줌
 		playerMoney += betMoney;
+	}
+
+	@Override
+	public String inputGamer() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void handDeck(PlayerVO vo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pHitAndStand() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dHitAndStand() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

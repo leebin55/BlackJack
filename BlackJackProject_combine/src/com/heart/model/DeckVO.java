@@ -4,10 +4,6 @@ public class DeckVO {
 
 	protected String deck;
 	protected Integer value;
-	
-
-	
-
 
 	@Override
 	public String toString() {
@@ -29,5 +25,4 @@ public class DeckVO {
 	public void setValue(Integer value) {
 		this.value = value;
 	}
-
 }

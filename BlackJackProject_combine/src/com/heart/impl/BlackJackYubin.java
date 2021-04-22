@@ -8,16 +8,18 @@ import com.heart.model.DeckVO;
 
 public class BlackJackYubin{
 
-	protected List<DeckVO> deckList;
+	public List<DeckVO> deckList;
 	protected String[] suit;
 	protected String[] strNum;
+	
+	
 	public BlackJackYubin() {
 		deckList= new ArrayList<DeckVO>();
 		suit =  new String[] {"Heart","Diamond","Clover","Space"};
 		strNum = new String[] {"A","2","3","4","5","6","7","8","9","10","K","Q","J"};
 	}
 	
-	public void createDeck(){ 
+	public void createDeck(List<DeckVO> deckList){ 
 		//TODO 카드형식을 만들고 각 카드에 따른 값을 만듬
 		for(int i = 0; i < suit.length ; i++) {
 			for(int j = 0 ; j < strNum.length ; j++) {
@@ -25,7 +27,6 @@ public class BlackJackYubin{
 				//Heart A Diamond 2 형식으로
 				DeckVO deckVO = new DeckVO();
 				deckVO.setDeck(deck);
-				deckList.add(deckVO); //deckList에 저장
 				try {//strNum 을 Integer형으로 바꿈
 					//오류가 없으면 strNum 에 담긴 값은 숫자값 >> 숫가 그대로 
 					//deckVO클래스 의 value값에 담고 deckList에 저장
@@ -47,6 +48,11 @@ public class BlackJackYubin{
 				}
 			}
 		}
+		
+	}
+
+	public void createDeck() {
+		// TODO Auto-generated method stub
 		
 	}
 	
