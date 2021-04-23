@@ -1,7 +1,12 @@
 package com.heart.impl;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-//import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
@@ -10,19 +15,21 @@ import com.heart.model.DeckVO;
 import com.heart.model.PlayerVO;
 import com.heart.service.BlackjackRule;
 
-public class BlacJackRuleImplV3 implements BlackjackRule {
+public class BlackJacReal2 implements BlackjackRule {
 
 	protected final int lineNum = 36;
 
 	protected Scanner scan;
 	protected Random rnd;
 
+	protected String basePath = "src/com/heart/game/";
+
 	protected List<DeckVO> deckList; // 셔플된 덱을 저장하는 리스트
 	protected int deckIndex = 0; // deckList에서 하나씩 차례대로 선택할수있도록 참조하는 인덱스값
 
 	protected BlackJackYubin makeDeck; // 카드덱을 만드는 메소드가 있는 클래스
-	protected DeckVO deckVO; // 덱VO 객체 생성
 
+	protected DeckVO deckVO; // 덱VO 객체 생성
 	protected PlayerVO voP; // 플레이어 정보 저장 값
 	protected PlayerVO voD; // 딜러 정보 저장 값
 
@@ -32,7 +39,7 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 	protected int inMoney; // 인슈어런스 머니
 
 	// TODO 생성자
-	public BlacJackRuleImplV3() {
+	public BlackJacReal2() {
 		scan = new Scanner(System.in);
 		rnd = new Random();
 
@@ -41,13 +48,10 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		deckList = new ArrayList<DeckVO>();
 
 		voP = new PlayerVO();
-		voD = new PlayerVO();
-
-		voD.setName("딜러");
-		voP.setMoney(10000);// 플레이어의 돈 10000원으로 디폴트값 설정
+		voD = new PlayerVO("딜러");
 
 	}
-
+	
 	// TODO 게임 메인 화면
 	// 모든 메소드가 콘트롤 되는 장소
 	@Override
@@ -56,43 +60,22 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		System.out.println("*" + "            " + "블랙잭게임" + "            " + "*");
 		System.out.println("*".repeat(lineNum));
 
-		// 이 클래스에 있는 inputGamer 를 불러와 메소드를 실행하고
-		// TODO voP.setName 중복
-		// inputGamer > 이름 입력안해도 넘어감
-		voP.setName(this.inputGamer());
+		// 플레이어 이름 입력
+		// 기존에 있는 이름이라면 파일 로드
+		this.inputGamer();
 
-		// 입력받은 이름값 불러옴
 		// inputGame에서 Quit 입력시 게임종료
-		// TODO getName == QUIT 이면 종료
-		if (voP.getName() == null) {
+		if (voP.getName().equals("QUIT")) {
 			System.out.println("\n ** 게임을 종료합니다. ** ");
 			return;
 		}
 
 		// 메뉴 입력
-		Integer intM = this.selectMenu();
-		// 게임 선택
-		if (intM == 1) {
-			this.playScreen();
-		}
-		// 게임 저장하기 선택
-		else if (intM == 2) {
-			// 게임저장 메소드
-		}
-
-		// 게임종료 선택
-		else if (intM == 3) {
-			System.out.println("\n ** 게임을 종료합니다. ** ");
-			return;
-		}
-
-	}
-
-	public Integer selectMenu() {
 		while (true) {
 			System.out.println("\n현재 " + voP.getName() + "님의 재산은 " + voP.getMoney() + "원 입니다.");
 			System.out.println("\n" + "-".repeat(lineNum));
 			System.out.println("게임을 시작하시겠습니까?");
+			System.out.println("▷ 0 : 새로운 이름 설정하기");
 			System.out.println("▷ 1 : 게임 하기");
 			System.out.println("▷ 2 : 게임 저장하기");
 			System.out.println("▷ 3 : 게임 끝내기");
@@ -107,12 +90,36 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 				System.out.println("숫자 1, 2, 3만 입력하세요");
 				continue;
 			}
-			if (intM < 1 || intM > 3) {
+
+			// 게임 선택
+			if (intM == 1) {
+				this.playScreen();
+			}
+
+			// 게임 저장하기 선택
+			else if (intM == 2) {
+				this.saveGame(voP.getName(), voP.getMoney());
+			}
+
+			// 게임종료 선택
+			else if (intM == 3) {
+				System.out.println("\n ** 게임을 종료합니다. ** ");
+				return;
+			}
+
+			else if (intM == 0) {
+				voP = new PlayerVO();
+				this.inputGamer();
+			}
+
+			// 잘못입력
+			else {
 				System.out.println("입력은 1, 2, 3만 가능합니다.");
 				continue;
 			}
-			return intM;
+
 		}
+
 	}
 
 	// TODO 게임 플레이 전반을 콘트롤 하는 장소
@@ -122,11 +129,11 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		makeDeck.createDeck(deckList); // 새 게임이 시작될 때 마다 새로운 덱
 		deckIndex = 0; // 새 게임이 시작될 때 마다 초기화
 
-		voP.setDeckList(null); // 플레이어가 가진 카드 리스트 초기화
-		voD.setDeckList(null); // 딜러가 가진 카드 리스트 초기화
-
-		voP.setScore(0); // 플레이어의 점수 초기화
-		voD.setScore(0); // 딜러의 점수 초기화
+		// 플레이어와 딜러의
+		// (순서대로) 점수의 합, 블랙잭여부, 버스트여부, 더블다운여부, 덱리스트를
+		// 초기화
+		voP.resetVO(0, false, false, false, null);
+		voD.resetVO(0, false, false, false, null);
 
 		this.shuffleDeck(); // 새로운 덱을 셔플하여 deckList에 다시 저장
 
@@ -148,14 +155,13 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		this.handDeck(voP);
 
 		// 블랙잭 확인하기 위한 디버깅 코드
-//		DeckVO vo0 = playerList.get(0);
-//		vo0.setValue(1);
-//		DeckVO vo1 = playerList.get(1);
-//		vo1.setValue(10);
+//			int num1 = 1 ;
+//			int num2 = 10 ;
+//					
+//			voP.setDeckList();		
 
 		// 플레이어 블랙잭 판단.
-		// playerVO 클래스에 true나 false 값을 담음
-		voP.setBj(this.checkBJ(voP.getDeckList()));
+		this.checkBJ(voP);
 
 		// 카드 보여주는 메소드
 		this.showCard();
@@ -163,28 +169,29 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		// 인슈어런스 여부 물어보기
 		this.insurance();
 
-		// 플레이어가 블랙잭이 아닐 경우 hit & stand 진행
+		// 플레이어가 블랙잭
 		if (voP.getBj())
 			System.out.println("블랙잭입니다!");
-		else if (!voP.getBj())
+
+		// 플레이어가 블랙잭이 아닐 경우
+		else if (!voP.getBj()) {
+
 			this.askD_Down(); // pHitAndStand 도 여기서 진행하는게 더 보기 좋을 거같아서 pHitAndStand에 조건으로 진행
-		if (voP.getD_Down() == false) { // 더블다운을 진행하지 않을때 pHitAndStand 진행
-			this.pHitAndStand();
+
+			if (voP.getD_Down() == false) { // 더블다운을 진행하지 않을때 pHitAndStand 진행
+				this.pHitAndStand();
+			}
+
 		}
 
 		// 딜러의 블랙잭 판단
-		voD.setBj(this.checkBJ(voD.getDeckList()));
+		this.checkBJ(voD);
 
 		// 플레이어가 블랙잭이 아니고 동시에
 		// 딜러가 블랙잭이 아니면 딜러가 힛앤스탠드를 진행한다.
 		if (!voP.getBj() && !voD.getBj()) {
 			this.dHitAndStand();
 
-			// 만약 딜러가 버스트라면
-			// voD의 bust판단 변수를 true로 처리하여 결과에서
-			// Bust때 딜러의 승리로 판정되지 않도록 한다.
-			if (voD.getScore() > 21)
-				voD.setBust(true);
 		}
 
 		// 결과창
@@ -192,64 +199,114 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 
 		// 돈 반환
 		this.gamerMoney();
-		return;
+
 	}
 
 	public void askD_Down() {
+		if (voP.getMoney() - betMoney  >= 0) {
+			//playScreen 에서 bettingMoney 를 실행해서 이미 voP.getMoney() 에서 betMoney가 빠져있는상태
+			// 그 값에서 - 다시한번 betMoney 를 뺀값이 0 이상이면 실행(doubleDown은 베팅금 2배)
 
-		while (true) {
-			System.out.println("더블다운을 진행 하시겠습니까?( Y / N)");
-			System.out.print(" ▷ ");
-			String strAnswer = scan.nextLine();
-			if (strAnswer.trim().equals("")) {
-				// 아무것도 입력안했을때
-				System.out.println(" Y 와 N 중 반드시 선택해 주세요");
-				continue;
+			while (true) {
+				System.out.println("더블다운을 진행 하시겠습니까?( Y / N)");
+				System.out.print(" ▷ ");
+				String strAnswer = scan.nextLine();
+				if (strAnswer.trim().equals("")) {
+					// 아무것도 입력안했을때
+					System.out.println(" Y 와 N 중 반드시 선택해 주세요");
+					continue;
+				}
+				if (strAnswer.trim().equalsIgnoreCase("Y")) {
+					this.doubleDown();
+
+				} else if (!(strAnswer.trim().equalsIgnoreCase("N"))) {// Y 값도 아니고 N 값도 아닌 그 외의 값
+					System.out.println("Y 또는 N 중에 선택해 주세요");
+					continue;
+				}
+				break;
 			}
-			if (strAnswer.trim().equalsIgnoreCase("Y")) {
-				this.DoubleDown();
-				// Y 를 입력했을 때만 VO 값을 true 로
-				// 초기 기본값 false
-				// N 을 입력했다면 이미 기본값이 false이므로 변경 불필요
-			} else if (!(strAnswer.trim().equalsIgnoreCase("N"))) {// Y 값도 아니고 N 값도 아닌 그 외의 값
-				System.out.println("Y 또는 N 중에 선택해 주세요");
-				continue;
-			}
-			break; // n을 입력할때는 아무런 코드 실행이 안되서 여기서 break; 
 		}
+
 	}
 
-	// 이름때문에 더블다운 진행한거 같은 그냥 askD_Down 에서 진행
-	public void DoubleDown() {
+	// 이름때문에 더블다운 진행한거 같은 그냥 askDDown 에서 진행
+	public void doubleDown() {
 		voP.setD_Down(true);// true 로 변경
 		this.handDeck(voP);// 악 한장만 받고 끝
+
+		int sum = voP.getMoney() - betMoney;
+		voP.setMoney(sum);
+
 		betMoney *= 2; // 베팅금 2배로
-		System.out.println("현재 베팅금은 "+ betMoney + "원 입니다.");
-		if(voP.getScore() >21) {
+		System.out.println("더블다운하셨으므로 베팅금이 두배가 됩니다.");
+
+		if (voP.getScore() > 21)
 			voP.setBust(true);
-		}
+		System.out.println("!BUST!");
+
 	}
 
 	// TODO 김소정
 	// 플레이어의 정보 입력
-	@Override
-	public String inputGamer() {
 
-		// 플레이어의 이름을 입력받아서 동일한 이름의 파일이 있다면
-		// 그 파일을 불러오거나 혹은 새로 시작할지 물어보기
-		// playerVO 의 name 에 scan 받은 값을 담아서(set)
-		// 그 값을 불러와(get) QUIT와 같으면 return 을 null 로
-		// 그외의 값은 vo.get() 값을 그대로 return
+	public void inputGamer() {
 
-		System.out.println("\n" + "-".repeat(lineNum));
+		System.out.println("\n" + "-".repeat(50));
 		System.out.println("플레이어의 이름을 입력하세요.(QUIT : 종료)");
 		System.out.print(" 이름 입력 >> ");
-		voP.setName(scan.nextLine());
-		if (voP.getName().equals("QUIT"))
-			return null;
+		String id = scan.nextLine();
 
-		System.out.println("-".repeat(lineNum));
-		return voP.getName();
+		this.loadGame(id);
+
+		if (id.equals("QUIT")) {
+			return;
+		}
+
+		System.out.println("-".repeat(50));
+	}
+
+	// TODO 김소정
+	// 플레이어의 정보 불러오기
+	public void loadGame(String id) {
+
+		while (true) {
+			System.out.println("게임을 불러옵니다");
+
+			if (id.equals("")) {
+				System.out.println("이름은 반드시 입력하세요");
+				continue;
+			}
+
+			FileReader fileReader = null;
+			BufferedReader buffer = null;
+
+			try {
+				fileReader = new FileReader(basePath + id);
+				buffer = new BufferedReader(fileReader);
+
+				String reader = buffer.readLine();
+				String[] source = reader.split(":");
+
+				System.out.println("저장된 기록을 불러왔습니다");
+
+				voP.setName(id);
+				voP.setMoney(Integer.valueOf(source[1]));
+				System.out.printf("%s 님의 잔액은 %d 입니다.\n", id, voP.getMoney());
+				buffer.close();
+				return;
+
+			} catch (FileNotFoundException e) {
+				System.out.println("\n저장된 파일이 없습니다.");
+				System.out.println("입력하신 이름으로 게임을 진행합니다.");
+				voP.setName(id);
+				return;
+			} catch (IOException e) {
+				System.out.println("\n파일에 문제가 있습니다");
+				System.out.println("입력하신 이름으로 게임을 진행합니다.");
+				voP.setName(id);
+				return;
+			}
+		} // while end
 
 	}
 
@@ -267,8 +324,7 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 
 			try {
 				intMoney = Integer.valueOf(strMoney);
-				int sum = voP.getMoney() - intMoney;
-				voP.setMoney(sum);
+
 			} catch (NumberFormatException e) {
 				System.out.println("베팅금은 숫자 입력만 가능합니다.");
 				continue;
@@ -281,6 +337,9 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 				System.out.println("베팅금은 100단위로만 가능합니다.");
 				continue;
 			}
+
+			int sum = voP.getMoney() - intMoney;
+			voP.setMoney(sum);
 
 			return intMoney;
 		}
@@ -333,11 +392,11 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		 * deckList는 이미 셔플된 덱의 리스트이기 때문에 랜덤으로 덱을 뽑을 수 있음과 동시에 중복성검사도 할 필요가 없다.
 		 * 
 		 */
-//		Collections.shuffle(deckList); 
+//			Collections.shuffle(deckList); 
 
 		int dSize = deckList.size();
 
-		for (int i = 0; i < 50 ; i++) {
+		for (int i = 0; i < 50; i++) {
 			int num = rnd.nextInt(dSize);
 			DeckVO vo1 = deckList.get(i);
 			DeckVO voNum = deckList.get(num);
@@ -352,10 +411,10 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		}
 
 		// 디버깅 코드
-//		for(int i = 0 ; i < dSize ; i ++) {
-//			DeckVO vo = deckList.get(i) ;
-//			System.out.println(vo.toString());
-//		}
+//			for(int i = 0 ; i < dSize ; i ++) {
+//				DeckVO3 vo = deckList.get(i) ;
+//				System.out.println(vo.toString());
+//			}
 
 	}
 
@@ -383,17 +442,18 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 	// TODO 김소정
 	// 블랙잭 판단 메소드
 	@Override
-	public Boolean checkBJ(List<DeckVO> list) {
+	public void checkBJ(PlayerVO vo) {
 
-		DeckVO vo0 = list.get(0);
-		DeckVO vo1 = list.get(1);
+		List<DeckVO> voList0 = vo.getDeckList();
+		DeckVO vo0 = voList0.get(0);
+
+		List<DeckVO> voList1 = vo.getDeckList();
+		DeckVO vo1 = voList1.get(1);
 
 		if (vo0.getValue() == 1 && vo1.getValue() == 10) {
-			return true;
+			vo.setBj(true);
 		} else if (vo1.getValue() == 1 && vo0.getValue() == 10) {
-			return true;
-		} else {
-			return false;
+			vo.setBj(true);
 		}
 
 	}
@@ -408,6 +468,7 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		// 플레이어와 딜러 모두 카드를 2장씩 들고 있는 상황
 		// 블랙잭이 아님
 		// 플레이어가 히트와 스탠드 중 선택할 수 있음
+
 		// 플레이어 진행
 		while (true) {
 			String hOs = this.askhOs(); // 히트 스탠드를 묻는 프롬프트와 입력받기
@@ -421,11 +482,12 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 					break;
 				}
 
-				else if (voP.getScore() == 21)
+				else if (voP.getScore() == 21) {
+					System.out.println("Perfect");
 					break;
-
+				}
 				// if 점수가 21이상(bust)이면 break, 아니면 반복(이미됨)
-			} else if (hOs.equals("stnd")) {
+			} else if (hOs.equals("stand")) {
 				System.out.println("-".repeat(lineNum));
 				System.out.println("플레이어가 STAND를 선언했습니다");
 				break;
@@ -443,15 +505,25 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 	// 딜러의 히트앤 스탠드 진행
 	@Override
 	public void dHitAndStand() {
+
 		// 선택지 없이 카드만 공개
 		while (true) {
 			this.hit(voD);
 			;// 딜러 현재 가진 카드합이 리턴되는 메서드
 			if (voD.getScore() > 16)
 				break;
-			else if (voD.getScore() == 21)
-				break;
+
+//				else if (voD.getScore() == 21)
+//					break;
+
 		} // while end (딜러)
+
+		// 만약 딜러가 버스트라면
+		// voD의 bust판단 변수를 true로 처리하여 결과에서
+		// Bust때 딜러의 승리로 판정되지 않도록 한다.
+		if (voD.getScore() > 21)
+			voD.setBust(true);
+
 	}// dHitAndStand end
 
 	// TODO 장혜미
@@ -461,7 +533,7 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		System.out.println();
 		System.out.println("HIT OR STAND?");
 		System.out.println("HIT : hit");
-		System.out.println("STAND : stnd");
+		System.out.println("STAND : stand");
 		System.out.print(">> ");
 		String answer = scan.nextLine();
 
@@ -514,11 +586,11 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		System.out.println(".".repeat(lineNum));
 
 		// 블랙잭 표시
-		if (voP.getBj())
+		if (vo.getBj())
 			System.out.println(vo.getName() + " 블랙잭!");
 
 		// BUST 표시
-		else if (voP.getBust())
+		else if (vo.getBust())
 			System.out.println(vo.getName() + " BUST!");
 
 		// 둘 다 아니면 점수 출력
@@ -542,32 +614,40 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 	@Override
 	public void gamerMoney() {
 
-		if (voD.getBj()) {
-			System.out.println("인슈어런스 보상금을 돌려드립니다.");
-			System.out.println((inMoney * 2) + "원 지급");
-		}
+	      // 인슈어런스 진행했을 시, 딜러가 블랙잭이 맞았다면 인슈어런스 금액 돌려줌
+	      if (inYN && voD.getBj()) {
+	         System.out.println("인슈어런스 보험금을 돌려드립니다.");
+	         System.out.println((inMoney * 2) + "원 지급");
+	         voP.setMoney(voP.getMoney() + (inMoney * 2));
+	      }
 
-		// 플레이어, 딜러 둘 다 블랙잭,BUST 아님
-		// 양 쪽 점수 비교
-		if (voP.getBust()) {
-			lose();
-		} else if ((voP.getScore() > voD.getScore()) || voD.getBust()) {
-			win();
-		} else if (voD.getScore() > voP.getScore()) {
-			lose();
-		} else if (voD.getScore() == voP.getScore()) {
-			push();
-		}
+	      Integer pScore = voP.getScore(); // 플레이어의 최종 점수
+	      Integer dScore = voD.getScore(); // 딜러의 최종 점수
 
-		if (voP.getBj()) {
-			if (voP.getBj()) {
-				this.push();
-			} else {
-				this.win_bj();
-			}
-		}
+	      // 2021.04.23 블랙잭으로 인한 승부계산 <-> 블랙잭 아닐 때 승부 계산 함수 자리 바꾸고 return 추가
+	      if (voP.getBj()) { // 플레이어가 블랙잭이라면
+	         if (voD.getBj()) { // 딜러가 블랙잭인지도 확인하고 딜러도 블랙잭이라면
+	            push(); // 무승부
+	            return; // 아래 if 문은 실행되지 않게 return 해버리기
+	         }
+	         else { // 딜러는 블랙잭이 아니라면
+	            win_bj(); // 플레이어 승리 ~!
+	            return;
+	         }
+	      }
+	      
+	      if (voP.getBust()) { // 플레이어가 BUST
+	         if (voD.getBust()) push(); // 딜러도 BUST 라면 무승부
+	         else lose(); // 딜러는 BUST 아니라면 패배
+	      } else if (((pScore > dScore) || voD.getBust())) win();   // 플레이어는 BUST가 아니면서 딜러보다 점수가 높거나, 딜러가 BUST면 승리
+	      
+	      else if (pScore < dScore) lose();   // 플레이어, 딜러는 BUST가 아니면서 플레이어가 딜러보다 점수가 낮으면 패배
+	      
+	      else if (pScore == dScore) push();   // 플레이어, 딜러는 BUST가 아니면서 플레이어와 딜러 점수가 같으면 무승부
 
-	}
+	      else if (voD.getBj()) lose();
+
+	   }
 
 	// TODO 최선영 돈계산
 	public void win_bj() {
@@ -670,5 +750,42 @@ public class BlacJackRuleImplV3 implements BlackjackRule {
 		} // end while
 
 	}
+
+	// TODO 김소정
+	// 게임 저장하기
+	private void saveGame(String id, Integer money) {
+
+		/*
+		 * 입력한 아이디로 게임을 저장한다 voP.setName(this.inputGamer());
+		 */
+
+		while (true) {
+			System.out.println("진행상황을 저장합니다." + "이미 저장되었다면 덮어씌움");
+
+			FileWriter fileWriter = null;
+			PrintWriter out = null;
+
+			try {
+				fileWriter = new FileWriter(basePath + id);
+				out = new PrintWriter(fileWriter);
+
+				out.printf("%s:%d\n", id, money);
+				out.flush();
+				out.close();
+				System.out.println("\n-save complete-");
+				break;
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				System.out.println(id + "파일 생성 오류");
+				System.out.println("파일이름을 다시입력하세요");
+				continue;
+			}
+		} // while end
+
+	}
+
+	// 파일이름을 불러온다
+	// 건너뛰거나 파일에 문제가있으면 새로운 게임으로 시작한다.
 
 }

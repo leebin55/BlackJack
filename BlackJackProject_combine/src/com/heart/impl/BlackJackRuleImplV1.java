@@ -239,7 +239,7 @@ public class BlackJackRuleImplV1 implements BlackjackRule {
 
 	}
 
-	@Override
+	
 	public Boolean checkBJ(List<DeckVO> list) {
 		// TODO 김소정
 
@@ -407,6 +407,18 @@ public class BlackJackRuleImplV1 implements BlackjackRule {
 
 	@Override
 	public void dHitAndStand() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	public void inputGamer() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void checkBJ(PlayerVO vo) {
 		// TODO Auto-generated method stub
 		
 	}

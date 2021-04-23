@@ -2,8 +2,8 @@ package com.heart.model;
 
 public class DeckVO {
 
-	protected String deck;
-	protected Integer value;
+	private String deck;
+	private Integer value;
 
 	@Override
 	public String toString() {

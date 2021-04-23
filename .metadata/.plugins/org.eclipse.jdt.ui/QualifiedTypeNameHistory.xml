@@ -10,9 +10,11 @@
     <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
     <fullyQualifiedTypeName name="com.heart.model.PlayerVO"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="com.heart.impl.BlackJackRuleImplV2"/>
     <fullyQualifiedTypeName name="java.util.List"/>
-    <fullyQualifiedTypeName name="com.heart.service.BlackjackRule"/>
     <fullyQualifiedTypeName name="com.heart.impl.BlackJackRuleImplV1"/>
     <fullyQualifiedTypeName name="com.heart.impl.BlackJackYubin"/>
+    <fullyQualifiedTypeName name="com.heart.impl.BlackJackRuleImplV2"/>
+    <fullyQualifiedTypeName name="com.heart.service.BlackjackRule"/>
+    <fullyQualifiedTypeName name="com.heart.impl.BlackJacReal"/>
+    <fullyQualifiedTypeName name="com.heart.model.PlayerVO2"/>
 </qualifiedTypeNameHistroy>
