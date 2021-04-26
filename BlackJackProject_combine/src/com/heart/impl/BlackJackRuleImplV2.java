@@ -1,5 +1,8 @@
 package com.heart.impl;
-
+/*
+ * XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ *수정 전용 오류만 안뜨도록만 해놓음
+ */
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,7 +63,7 @@ public class BlackJackRuleImplV2 implements BlackjackRule {
 		System.out.println("*" + "            " + "블랙잭게임" + "            " + "*");
 		System.out.println("*".repeat(lineNum));
 
-		voP.setName(this.inputGamer());
+		voP.setName(this.inputGamer1());
 		
 		
 		if (voP.getName() == null) {
@@ -176,8 +179,8 @@ public class BlackJackRuleImplV2 implements BlackjackRule {
 	}
 
 	// TODO 플레이어의 정보 입력
-	@Override
-	public String inputGamer() {
+	
+	public String inputGamer1() {
 
 		System.out.println("\n" + "-".repeat(lineNum));
 		System.out.println("플레이어의 이름을 입력하세요.(QUIT : 종료)");
@@ -312,7 +315,6 @@ public class BlackJackRuleImplV2 implements BlackjackRule {
 	
 	// TODO 김소정
 	// 블랙잭 판단 메소드
-	@Override
 	public Boolean checkBJ(List<DeckVO> list) {
 
 		DeckVO vo0 = list.get(0);
@@ -586,6 +588,18 @@ public class BlackJackRuleImplV2 implements BlackjackRule {
 
 	@Override
 	public void handDeck(PlayerVO vo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void inputGamer() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void checkBJ(PlayerVO vo) {
 		// TODO Auto-generated method stub
 		
 	}

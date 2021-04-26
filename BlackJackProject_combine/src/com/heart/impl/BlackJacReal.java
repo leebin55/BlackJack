@@ -259,65 +259,74 @@ public class BlackJacReal implements BlackjackRule {
 
 	// TODO 김소정
 	// 플레이어의 정보 입력
-	@Override
-	 public void inputGamer() {
-	       
-	      while (true) {
-	         System.out.println("\n" + "-".repeat(50));
-	         System.out.println("플레이어의 이름을 입력하세요.(QUIT : 종료)");
-	         System.out.print(" 이름 입력 >> ");
-	         String id = scan.nextLine();
-	         if (id.trim().equals("")) {
-	            System.out.println("아이디는 빈칸으로 사용하실 수 없습니다");
-	            continue;
-	         }
-	         voP.setName(id);
-	         break;
-	      } // while end   
-	   }
 
+	@Override
+	public void inputGamer() {
+
+		while (true) {
+			System.out.println("\n" + "-".repeat(50));
+			System.out.println("플레이어의 이름을 입력하세요.(QUIT : 종료)");
+			System.out.print(" 이름 입력 >> ");
+			String id = scan.nextLine();
+			voP.setName(id);
+			if (id.trim().equals("")) {
+				System.out.println("아이디는 빈칸으로 사용하실 수 없습니다");
+				continue;
+			}
+			
+			if (id.trim().equalsIgnoreCase("QUIT")) {
+				voP.setName(id);
+				break;
+			}
+
+			this.loadGame(id);
+
+			break;
+		} // while end
+
+	}
 
 
 	// TODO 김소정
 	// 플레이어의 정보 불러오기
 	public void loadGame(String id) {
-	      id = voP.getName();
-	      
-	      while (true) {
-	         System.out.println("게임을 불러옵니다");
+		id = voP.getName();
 
-	         FileReader fileReader = null;
-	         BufferedReader buffer = null;
+		while (true) {
+			System.out.println("게임을 불러옵니다");
 
-	         try {
-	            fileReader = new FileReader(basePath + id);
-	            buffer = new BufferedReader(fileReader);
+			FileReader fileReader = null;
+			BufferedReader buffer = null;
 
-	            String reader = buffer.readLine();
-	            String[] source = reader.split(":");
+			try {
+				fileReader = new FileReader(basePath + id);
+				buffer = new BufferedReader(fileReader);
 
-	            System.out.println("저장된 기록을 불러왔습니다");
+				String reader = buffer.readLine();
+				String[] source = reader.split(":");
 
-	            voP.setName(id);
-	            voP.setMoney(Integer.valueOf(source[1]));
-	            System.out.printf("%s 님의 잔액은 %d 입니다.\n", id, voP.getMoney());
-	            buffer.close();
-	            return;
+				System.out.println("저장된 기록을 불러왔습니다");
 
-	         } catch (FileNotFoundException e) {
-	            System.out.println("\n저장된 파일이 없습니다.");
-	            System.out.println("입력하신 이름으로 게임을 진행합니다.");
-	            voP.setName(id);
-	            return;
-	         } catch (IOException e) {
-	            System.out.println("\n파일에 문제가 있습니다");
-	            System.out.println("입력하신 이름으로 게임을 진행합니다.");
-	            voP.setName(id);
-	            return;
-	         }
-	      } // while end
+				voP.setName(id);
+				voP.setMoney(Integer.valueOf(source[1]));
+				System.out.printf("%s 님의 잔액은 %d 입니다.\n", id, voP.getMoney());
+				buffer.close();
+				return;
 
-	   }
+			} catch (FileNotFoundException e) {
+				System.out.println("\n저장된 파일이 없습니다.");
+				System.out.println("입력하신 이름으로 게임을 진행합니다.");
+				voP.setName(id);
+				return;
+			} catch (IOException e) {
+				System.out.println("\n파일에 문제가 있습니다");
+				System.out.println("입력하신 이름으로 게임을 진행합니다.");
+				voP.setName(id);
+				return;
+			}
+		} // while end
+
+	}
 	
 
 	// TODO 베팅금 입력 메소드
@@ -474,7 +483,6 @@ public class BlackJacReal implements BlackjackRule {
 		} else if (vo1.getValue() == 1 && vo0.getValue() == 10) {
 			vo.setBj(true);
 		}
-
 	}
 
 	// 일단 진행하려고
@@ -484,7 +492,7 @@ public class BlackJacReal implements BlackjackRule {
 	// 플레이어와 딜러의 히트 스탠드를 진행한다
 	@Override
 	public void pHitAndStand() {
-	      // 플레이어와 딜러 모두 카드를 2장씩 들고 있는 상황
+		  // 플레이어와 딜러 모두 카드를 2장씩 들고 있는 상황
 	      // 블랙잭이 아님
 	      // 플레이어가 히트와 스탠드 중 선택할 수 있음
 
@@ -526,25 +534,23 @@ public class BlackJacReal implements BlackjackRule {
 	@Override
 	public void dHitAndStand() {
 
-		// 선택지 없이 카드만 공개
-		while (true) {
-			this.hit(voD);
-			;// 딜러 현재 가진 카드합이 리턴되는 메서드
-			if (voD.getScore() > 16)
-				break;
+	    // 선택지 없이 카드만 공개
+	      while (true) {
+	         // 딜러 현재 가진 카드합이 리턴되는 메서드
+	         if (voD.getScore() > 16) {
+	            break;
+	         } else {
+	            this.hit(voD);
+	         }
+	      } // while end (딜러)
 
-//				else if (voD.getScore() == 21)
-//					break;
+	      // 만약 딜러가 버스트라면
+	      // voD의 bust판단 변수를 true로 처리하여 결과에서
+	      // Bust때 딜러의 승리로 판정되지 않도록 한다.
+	      if (voD.getScore() > 21)
+	         voD.setBust(true);
 
-		} // while end (딜러)
-
-		// 만약 딜러가 버스트라면
-		// voD의 bust판단 변수를 true로 처리하여 결과에서
-		// Bust때 딜러의 승리로 판정되지 않도록 한다.
-		if (voD.getScore() > 21)
-			voD.setBust(true);
-
-	}// dHitAndStand end
+	   }
 
 	// TODO 장혜미
 	// 히트 스탠드 묻는 메서드
@@ -774,7 +780,7 @@ public class BlackJacReal implements BlackjackRule {
 
 	// TODO 김소정
 	// 게임 저장하기
-	private void saveGame(String id, Integer money) {
+	public void saveGame(String id, Integer money) {
 
 		/*
 		 * 입력한 아이디로 게임을 저장한다 voP.setName(this.inputGamer());
