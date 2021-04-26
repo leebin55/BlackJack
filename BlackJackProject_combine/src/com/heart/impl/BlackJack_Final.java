@@ -15,7 +15,7 @@ import com.heart.model.DeckVO;
 import com.heart.model.PlayerVO;
 import com.heart.service.BlackjackRule;
 
-public class BlackJacReal implements BlackjackRule {
+public class BlackJack_Final implements BlackjackRule {
 
 	protected final int lineNum = 36;
 
@@ -39,7 +39,7 @@ public class BlackJacReal implements BlackjackRule {
 	protected int inMoney; // 인슈어런스 머니
 
 	// TODO 생성자
-	public BlackJacReal() {
+	public BlackJack_Final() {
 		scan = new Scanner(System.in);
 		rnd = new Random();
 
@@ -71,7 +71,8 @@ public class BlackJacReal implements BlackjackRule {
 		}
 
 		// 메뉴 입력
-		while (voP.getHaveMoney()) {
+	//	while (voP.getHaveMoney()) {
+		while(true) {
 			System.out.println("\n현재 " + voP.getName() + "님의 재산은 " + voP.getMoney() + "원 입니다.");
 			System.out.println("\n" + "-".repeat(lineNum));
 			System.out.println("게임을 시작하시겠습니까?");
@@ -119,9 +120,9 @@ public class BlackJacReal implements BlackjackRule {
 			}
 
 		}
-		if(voP.getHaveMoney() == false) {
-			System.out.println("현재 "+ voP.getName() + "님의 재산이 없으므로 게임에 참여하실 수 없습니다.");
-		}
+//		if(voP.getHaveMoney() == false) {
+//			System.out.println("현재 "+ voP.getName() + "님의 재산이 없으므로 게임에 참여하실 수 없습니다.");
+//		}
 
 	}
 
@@ -180,6 +181,7 @@ public class BlackJacReal implements BlackjackRule {
 		// 인슈어런스 여부 물어보기
 		this.insurance();
 
+		
 		// 플레이어가 블랙잭
 		if (voP.getBj())
 			System.out.println("블랙잭입니다!");
@@ -472,11 +474,10 @@ public class BlackJacReal implements BlackjackRule {
 	@Override
 	public void checkBJ(PlayerVO vo) {
 
-		List<DeckVO> voList0 = vo.getDeckList();
-		DeckVO vo0 = voList0.get(0);
+		List<DeckVO> voList = vo.getDeckList();
+		DeckVO vo0 = voList.get(0);
 
-		List<DeckVO> voList1 = vo.getDeckList();
-		DeckVO vo1 = voList1.get(1);
+		DeckVO vo1 = voList.get(1);
 
 		if (vo0.getValue() == 1 && vo1.getValue() == 10) {
 			vo.setBj(true);
@@ -703,7 +704,7 @@ public class BlackJacReal implements BlackjackRule {
 		// 배팅금 잃은 거라 그대로임
 
 		System.out.println("\n" + voP.getName() + "님 패배");
-		if(voP.getMoney() == 0) voP.setHaveMoney(false);
+		//if(voP.getMoney() == 0) voP.setHaveMoney(false);
 		return;
 	}
 
